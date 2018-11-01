@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RouteOptionsActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="603dp"
+        android:layout_marginTop="80dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/navigation"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/dest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:textSize="30sp"/>
+
+        <LinearLayout
+            android:id="@+id/imageSet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dest"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/startImage"
+                android:layout_width="0dp"
+                android:layout_height="400dp"
+                android:layout_gravity="center"
+                android:layout_weight=".4"
+                app:srcCompat="@drawable/exit_room" />
+
+            <ImageView
+                android:id="@+id/ascend"
+                android:layout_width="0dp"
+                android:layout_height="400dp"
+                android:layout_gravity="center"
+                android:layout_weight=".15"
+                app:srcCompat="@drawable/stairs_icon" />
+
+            <ImageView
+                android:id="@+id/destImage"
+                android:layout_width="0dp"
+                android:layout_height="400dp"
+                android:layout_gravity="center"
+                android:layout_weight=".4"
+                app:srcCompat="@drawable/arrive_after_stairs" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/estimates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imageSet"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/dist_est"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:text="@string/stairs_dist_est"/>
+            <TextView
+                android:id="@+id/time_est"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:text="@string/stairs_time_est"/>
+            <Switch
+                android:id="@+id/should_vibrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:checked="true"
+                android:layout_marginStart="125dp"
+                android:layout_marginLeft="125dp"
+                android:text="@string/vibrate"
+                 />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation" />
+
+</android.support.constraint.ConstraintLayout>
