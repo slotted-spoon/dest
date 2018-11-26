@@ -6,8 +6,24 @@
     <string name="settings">Settings</string>
     <string name="next_step">Next Step</string>
     <string name="arrive">Arrive</string>
-    <string name="continueAfterStairs">Continue to first alcove</string>
+    <string-array name="stairsRoute">
+        <item>Exit the room to the left</item>
+        <item>Turn left into the hallway</item>
+        <item>Go up the stairs for two floors</item>
+        <item>Turn to head down the hallway</item>
+        <item>Continue to first alcove</item>
+        <item>Turn into the alcove towards the first door on the right</item>
+    </string-array>
+    <string-array name="elevRoute">
+        <item>Exit the room to the left</item>
+        <item>Enter the elevator on the right</item>
+        <item>Go to fourth floor</item>
+        <item>Exit elevator and turn left</item>
+        <item>Continue down the hallway</item>
+    </string-array>
     <string name="continueDown4thFloor">Continue down the hallway</string>
+    <string name="stairs">stairs</string>
+    <string name="continueAfterStairs">after stairs</string>
     <string name="elevator">Enter the elevator on the right</string>
     <string name="inElevator">Go to fourth floor</string>
     <string name="exitRoom">Exit the room to the left</string>
@@ -16,7 +32,6 @@
     <string name="turnAroundStairs">Turn to head down the hallway</string>
     <string name="turnAroundRoom">Turn into the alcove towards the first door on the right</string>
     <string name="leftFromStudio">Turn left into the hallway</string>
-    <string name="stairs">Go up the stairs, two floors</string>
     <string name="title_activity_settings">Settings</string>
     <string name="cancel">Cancel Navigation</string>
     <string name="go">Go</string>

@@ -3,42 +3,54 @@ package com.slottedspoon.indoornav;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
-import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.Gravity;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageSwitcher;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextSwitcher;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
+import android.widget.Toast;
+
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+import com.viewpagerindicator.CirclePageIndicator;
+
 import static android.view.KeyEvent.KEYCODE_BUTTON_L1;
 import static android.view.KeyEvent.KEYCODE_BUTTON_L2;
 import static android.view.KeyEvent.KEYCODE_BUTTON_R2;
 
 public class NavigationActivity extends AppCompatActivity {
     private Integer stairsRoute[] = {R.drawable.exit_room, R.drawable.turn_left_from_studio, R.drawable.up_stairs,
-    R.drawable.turn_around_after_stairs, R.drawable.continue_after_stairs, R.drawable.turn_around_at_room, R.drawable.arrive_after_stairs};
-    private Integer stairsDirections[] = {R.string.exitRoom, R.string.leftFromStudio, R.string.stairs,
-    R.string.turnAroundStairs, R.string.continueAfterStairs, R.string.turnAroundRoom, R.string.arrive};
+            R.drawable.turn_around_after_stairs, R.drawable.continue_after_stairs, R.drawable.turn_around_at_room, R.drawable.arrive_after_stairs};
     private Integer elevatorRoute[] = {R.drawable.exit_room, R.drawable.elevator, R.drawable.in_elevator, R.drawable.left_from_elevator,
-    R.drawable.continue_down_4th_floor, R.drawable.arrive_from_elevator};
-    private Integer elevatorDirections[] = {R.string.exitRoom, R.string.elevator, R.string.inElevator, R.string.leftFromElevator,
-    R.string.continueDown4thFloor, R.string.arrive};
-    private Integer images[];
-    private Integer directions[];
-    private int currStep = 0;
+            R.drawable.continue_down_4th_floor, R.drawable.arrive_from_elevator};
+    LayoutInflater inflater;    //Used to create individual pages
+    ViewPager vp;               //Reference to class to swipe views
+    CirclePageIndicator mIndicator;
+    private String destName;
+    String[] directions;
+    Integer[] images;
+    private SlidingUpPanelLayout mLayout;
     private Vibrator vibrator;
     private boolean shouldVibrate;
-    private GestureDetectorCompat gestureDetectorCompat;
+    private int currStep = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,113 +58,108 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
 
         Intent intent = getIntent();
-        Boolean takeElevator = intent.getExtras().getBoolean(RouteOptionsActivity.ELEVATOR);
+        destName = intent.getExtras().getString(EnterDestActivity.DESTINATION);
+        boolean takeElevator = intent.getExtras().getBoolean(RouteOptionsActivity.ELEVATOR);
         shouldVibrate = intent.getExtras().getBoolean(RouteOptionsActivity.VIBRATE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
         if(takeElevator) {
             images = elevatorRoute;
-            directions = elevatorDirections;
+            directions = getResources().getStringArray(R.array.elevRoute);
         } else {
             images = stairsRoute;
-            directions = stairsDirections;
+            directions = getResources().getStringArray(R.array.stairsRoute);
         }
-        initializeImageSwitcher();
-        initializeTextSwitcher();
-        setInitialDirections();
-        gestureDetectorCompat = new GestureDetectorCompat(this, new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onDown(MotionEvent e) {return false;}
 
-            @Override
-            public void onShowPress(MotionEvent e) {}
+        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //Reference ViewPager defined in activity
+        vp=(ViewPager)findViewById(R.id.viewPager);
+        //set the adapter that will create the individual pages
+        vp.setAdapter(new MyPagesAdapter());
+        mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
+        mIndicator.setViewPager(vp);
 
+        ListView lv = (ListView) findViewById(R.id.list);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onSingleTapUp(MotionEvent e) {return false;}
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(NavigationActivity.this, "onItemClick", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {return false;}
+        // This is the array adapter, it takes the context of the activity as a
+        // first parameter, the type of list view as a second parameter and your
+        // array as a third parameter.
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                directions );
 
-            @Override
-            public void onLongPress(MotionEvent e) {}
+        lv.setAdapter(arrayAdapter);
 
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelSlideListener(new PanelSlideListener() {
             @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                if(e2.getX() > e1.getX()) {
-                    rotateStep(-1);
-                } else if(e2.getX() < e1.getX()) {
-                    rotateStep(1);
-                }
-                return true;
+            public void onPanelSlide(View panel, float slideOffset) {}
+            @Override
+            public void onPanelCollapsed(View panel) {}
+            @Override
+            public void onPanelExpanded(View panel) {}
+            @Override
+            public void onPanelAnchored(View panel) {}
+            @Override
+            public void onPanelHidden(View panel) {}
+        });
+        mLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLayout.setPanelState(PanelState.COLLAPSED);
+            }
+        });
+
+        TextView t = (TextView) findViewById(R.id.dest);
+        t.setText(destName);
+        Button f = (Button) findViewById(R.id.end);
+        f.setText("End Navigation");
+        f.setMovementMethod(LinkMovementMethod.getInstance());
+        f.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
 
-    private void initializeTextSwitcher() {
-        final TextSwitcher textSwitcher = (TextSwitcher) findViewById(R.id.textSwitcher);
-        textSwitcher.setFactory(new TextSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                TextView myText = new TextView(NavigationActivity.this);
-                myText.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-                myText.setTextSize(24);
-                return myText;
-            }
-        });
-
-        textSwitcher.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-        textSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
-    }
-
-    private void initializeImageSwitcher() {
-        final ImageSwitcher imageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher);
-        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                return new ImageView(NavigationActivity.this);
-            }
-        });
-
-        imageSwitcher.setInAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-        imageSwitcher.setOutAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
-    }
-
-    public void rotateStep(int step) {
-        currStep = (currStep+step)%images.length;
-        if (currStep == images.length) {
-            currStep = 0;
-        } else if (currStep < 0) {
-            currStep = images.length-1;
-        }
-        setCurrentImage();
-        setCurrentText();
-    }
-
-    public void finish(View arg0) {
-        finish();
-    }
-
-    private void setInitialDirections() {
-        setCurrentImage();
-        setCurrentText();
-    }
-
-    private void setCurrentImage() {
-        final ImageSwitcher imageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher);
-        imageSwitcher.setImageResource(images[currStep]);
-    }
-
-    private void setCurrentText() {
-        final TextSwitcher textSwitcher = (TextSwitcher) findViewById(R.id.textSwitcher);
-        textSwitcher.setText(getText(directions[currStep]));
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        this.gestureDetectorCompat.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
+    public boolean dispatchKeyEvent(KeyEvent KEvent) {
+        int keyaction = KEvent.getAction();
+        System.out.println(KEvent.getKeyCode());
 
+        if (keyaction == KeyEvent.ACTION_UP) {
+            int keycode = KEvent.getKeyCode();
+            switch (keycode) {
+                case KEYCODE_BUTTON_L1:
+                    System.out.println("Heartbeat");
+                    if(shouldVibrate) {
+                        vibrator.cancel();
+                        vibrator.vibrate(createHeartbeat());
+                    }
+                    break;
+                case KEYCODE_BUTTON_L2:
+                    System.out.println("Anger");
+                    vibrator.cancel();
+                    vibrator.vibrate(angryBuzz());
+                    break;
+                case KEYCODE_BUTTON_R2:
+                    System.out.println("Change");
+                    vibrator.cancel();
+                    vibrator.vibrate(notificationBuzz());
+                    rotateStep(1);
+                    break;
+            }
+        }
+        return super.dispatchKeyEvent(KEvent);
+    }
     @Override
     public boolean dispatchGenericMotionEvent(MotionEvent MEvent) {
         float motionAction = MEvent.getAxisValue(MotionEvent.AXIS_HAT_X);
@@ -164,39 +171,6 @@ public class NavigationActivity extends AppCompatActivity {
             }
         }
         return super.dispatchGenericMotionEvent(MEvent);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent KEvent) {
-        int keyaction = KEvent.getAction();
-
-        if (keyaction == KeyEvent.ACTION_DOWN) {
-            int keycode = KEvent.getKeyCode();
-            switch (keycode) {
-                case KEYCODE_BUTTON_L1:
-                    vibrator.cancel();
-                    vibrator.vibrate(createHeartbeat());
-                    break;
-                case KEYCODE_BUTTON_L2:
-                    vibrator.cancel();
-                    vibrator.vibrate(angryBuzz());
-                    break;
-                case KEYCODE_BUTTON_R2:
-                    if(shouldVibrate) {
-                        vibrator.cancel();
-                        vibrator.vibrate(notificationBuzz());
-                    }
-                    rotateStep(1);
-                    break;
-            }
-        }
-        return super.dispatchKeyEvent(KEvent);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private VibrationEffect softBuzz() {
-        return VibrationEffect.createOneShot(500,50);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -217,6 +191,109 @@ public class NavigationActivity extends AppCompatActivity {
             return VibrationEffect.createWaveform(vibratePattern, ampPattern, 0);
         } else {
             return VibrationEffect.createWaveform(vibratePattern, 0);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.bottomnav, menu);
+        MenuItem item = menu.findItem(R.id.action_toggle);
+        if (mLayout != null) {
+            if (mLayout.getPanelState() == PanelState.HIDDEN) {
+                item.setTitle("Show");
+            } else {
+                item.setTitle("Hide");
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_toggle: {
+                if (mLayout != null) {
+                    if (mLayout.getPanelState() != PanelState.HIDDEN) {
+                        mLayout.setPanelState(PanelState.HIDDEN);
+                        item.setTitle("Show");
+                    } else {
+                        mLayout.setPanelState(PanelState.COLLAPSED);
+                        item.setTitle("Hide");
+                    }
+                }
+                return true;
+            }
+            case R.id.action_anchor: {
+                if (mLayout != null) {
+                    if (mLayout.getAnchorPoint() == 1.0f) {
+                        mLayout.setAnchorPoint(0.7f);
+                        mLayout.setPanelState(PanelState.ANCHORED);
+                        item.setTitle("Disable Anchor");
+                    } else {
+                        mLayout.setAnchorPoint(1.0f);
+                        mLayout.setPanelState(PanelState.COLLAPSED);
+                        item.setTitle("Enable Anchor");
+                    }
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mLayout != null &&
+                (mLayout.getPanelState() == PanelState.EXPANDED || mLayout.getPanelState() == PanelState.ANCHORED)) {
+            mLayout.setPanelState(PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void rotateStep(int direction) {
+        currStep = currStep+direction;
+        if (currStep == images.length) {
+            currStep--;
+        } else if (currStep < 0) {
+            currStep = 0;
+        }
+        vp.setCurrentItem(currStep, true);
+    }
+
+    //Implement PagerAdapter Class to handle individual page creation
+    class MyPagesAdapter extends PagerAdapter {
+        @Override
+        public int getCount() {
+            //Return total pages, here one for each data item
+            return directions.length;
+        }
+        //Create the given page (indicated by position)
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            View page = inflater.inflate(R.layout.nav_step, null);
+            ((TextView)page.findViewById(R.id.textMessage)).setText(directions[position]);
+            ((ImageView)page.findViewById(R.id.image)).setImageResource(images[position]);
+            //Add the page to the front of the queue
+            ((ViewPager) container).addView(page, 0);
+            return page;
+        }
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            //See if object from instantiateItem is related to the given view
+            //required by API
+            return arg0==(View)arg1;
+        }
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            ((ViewPager) container).removeView((View) object);
+            object=null;
         }
     }
 }

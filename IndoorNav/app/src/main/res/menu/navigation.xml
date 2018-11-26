@@ -16,11 +16,11 @@
         android:enabled="true"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/navigation_go"
-        android:icon="@drawable/ic_arrow_forward_black_24dp"
-        android:title="@string/go"
-        android:enabled="true"
-        app:showAsAction="ifRoom"/>
+    <!--<item-->
+        <!--android:id="@+id/navigation_go"-->
+        <!--android:icon="@drawable/ic_arrow_forward_black_24dp"-->
+        <!--android:title="@string/go"-->
+        <!--android:enabled="true"-->
+        <!--app:showAsAction="ifRoom"/>-->
 
 </menu>

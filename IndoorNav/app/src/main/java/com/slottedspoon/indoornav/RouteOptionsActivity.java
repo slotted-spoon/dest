@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -37,14 +38,6 @@ public class RouteOptionsActivity extends AppCompatActivity {
                     changeCenterIcon(R.drawable.elevator_icon);
                     changeEstimates(R.string.elev_distance_est, R.string.elev_time_est);
                     takeElevator = true;
-                    break;
-                case R.id.navigation_go:
-                    Intent go = new Intent(RouteOptionsActivity.this, NavigationActivity.class);
-                    Switch vibrateSwitch = findViewById(R.id.should_vibrate);
-                    boolean shouldVibrate = vibrateSwitch.isChecked();
-                    go.putExtra(ELEVATOR, takeElevator);
-                    go.putExtra(VIBRATE, shouldVibrate);
-                    startActivity(go);
                     break;
             }
             return true;
@@ -110,6 +103,16 @@ public class RouteOptionsActivity extends AppCompatActivity {
         final TextView timeEstView = findViewById(R.id.time_est);
         distEstView.setText(distEst);
         timeEstView.setText(timeEst);
+    }
+
+    public void clickGo(View view) {
+        Intent go = new Intent(RouteOptionsActivity.this, NavigationActivity.class);
+        Switch vibrateSwitch = findViewById(R.id.should_vibrate);
+        boolean shouldVibrate = vibrateSwitch.isChecked();
+        go.putExtra(ELEVATOR, takeElevator);
+        go.putExtra(VIBRATE, shouldVibrate);
+        go.putExtra(EnterDestActivity.DESTINATION, destName);
+        startActivity(go);
     }
 
     @Override
