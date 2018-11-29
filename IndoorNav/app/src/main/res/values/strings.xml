@@ -9,7 +9,8 @@
     <string-array name="stairsRoute">
         <item>Exit the room to the left</item>
         <item>Turn left into the hallway</item>
-        <item>Go up the stairs for two floors</item>
+        <item>Take staircase on right</item>
+        <item>Go to fourth floor (2 floors)</item>
         <item>Turn to head down the hallway</item>
         <item>Continue to first alcove</item>
         <item>Turn into the alcove towards the first door on the right</item>
@@ -20,6 +21,48 @@
         <item>Go to fourth floor</item>
         <item>Exit elevator and turn left</item>
         <item>Continue down the hallway</item>
+    </string-array>
+    <string-array name="acRooms">
+        <item>AC 102 — Seminar Room</item>
+        <item>AC 104 — Laser Cutting Room</item>
+        <item>AC 105 — Machine Shop</item>
+        <item>AC 106 — Machine Shop</item>
+        <item>AC 109 — QEA Room</item>
+        <item>AC 113 — QEA Room</item>
+        <item>AC 126 — Classroom</item>
+        <item>AC 128 — Classroom</item>
+        <item>AC 129 — Shop</item>
+        <item>AC 202 — Seminar Room</item>
+        <item>AC 204 — Design Studio</item>
+        <item>AC 206 — Design Studio</item>
+        <item>AC 209 — Design Studio</item>
+        <item>AC 213 — Design Studio</item>
+        <item>AC 218 — SCOPE Room</item>
+        <item>AC 225 — Faculty Research Space</item>
+        <item>AC 226 — SCOPE Room</item>
+        <item>AC 228 — RoboLab</item>
+        <item>AC 302 — ECE Stockroom</item>
+        <item>AC 304 — POE Room</item>
+        <item>AC 305 — Seminar Room</item>
+        <item>AC 306 — POE Room</item>
+        <item>AC 309 — POE Room</item>
+        <item>AC 313 — Classroom</item>
+        <item>AC 318 — Classroom</item>
+        <item>AC 325 — EduKitchen</item>
+        <item>AC 326 — Classroom</item>
+        <item>AC 326a — Lab</item>
+        <item>AC 327 — EduSpace</item>
+        <item>AC 328 — Classroom</item>
+        <item>AC 329 — Lab</item>
+        <item>AC 404 — Bio Lab</item>
+        <item>AC 406 — Bio Lab</item>
+        <item>AC 409 — Lab</item>
+        <item>AC 413 — Lab</item>
+        <item>AC 416 — Faculty Research Space</item>
+        <item>AC 417 — Classroom</item>
+        <item>AC 426 — MatSci Lab</item>
+        <item>AC 427 — SEM Room</item>
+        <item>AC 428 — ISIM Classroom</item>
     </string-array>
     <string name="continueDown4thFloor">Continue down the hallway</string>
     <string name="stairs">stairs</string>
@@ -117,4 +160,7 @@
     <string name="elev_distance_est">Distance: 200ft</string>
     <string name="elev_time_est">Time: 5 minutes</string>
     <string name="vibrate">Vibrate</string>
+    <string name="title_activity_route_options">Route Options</string>
+    <string name="arrived">You have arrived!</string>
+    <string name="finish">Finish</string>
 </resources>

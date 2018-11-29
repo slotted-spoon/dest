@@ -37,7 +37,7 @@ import static android.view.KeyEvent.KEYCODE_BUTTON_L2;
 import static android.view.KeyEvent.KEYCODE_BUTTON_R2;
 
 public class NavigationActivity extends AppCompatActivity {
-    private Integer stairsRoute[] = {R.drawable.exit_room, R.drawable.turn_left_from_studio, R.drawable.up_stairs,
+    private Integer stairsRoute[] = {R.drawable.exit_room, R.drawable.turn_left_from_studio, R.drawable.up_stairs, R.drawable.on_stairs,
             R.drawable.turn_around_after_stairs, R.drawable.continue_after_stairs, R.drawable.turn_around_at_room, R.drawable.arrive_after_stairs};
     private Integer elevatorRoute[] = {R.drawable.exit_room, R.drawable.elevator, R.drawable.in_elevator, R.drawable.left_from_elevator,
             R.drawable.continue_down_4th_floor, R.drawable.arrive_from_elevator};
@@ -59,8 +59,8 @@ public class NavigationActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         destName = intent.getExtras().getString(EnterDestActivity.DESTINATION);
-        boolean takeElevator = intent.getExtras().getBoolean(RouteOptionsActivity.ELEVATOR);
-        shouldVibrate = intent.getExtras().getBoolean(RouteOptionsActivity.VIBRATE);
+        boolean takeElevator = intent.getExtras().getBoolean(OldRouteOptionsActivity.ELEVATOR);
+        shouldVibrate = intent.getExtras().getBoolean(OldRouteOptionsActivity.VIBRATE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if(takeElevator) {
             images = elevatorRoute;
@@ -79,12 +79,6 @@ public class NavigationActivity extends AppCompatActivity {
         mIndicator.setViewPager(vp);
 
         ListView lv = (ListView) findViewById(R.id.list);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(NavigationActivity.this, "onItemClick", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         // This is the array adapter, it takes the context of the activity as a
         // first parameter, the type of list view as a second parameter and your
@@ -112,6 +106,13 @@ public class NavigationActivity extends AppCompatActivity {
         mLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                mLayout.setPanelState(PanelState.COLLAPSED);
+            }
+        });
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                vp.setCurrentItem(position, true);
                 mLayout.setPanelState(PanelState.COLLAPSED);
             }
         });
@@ -260,11 +261,16 @@ public class NavigationActivity extends AppCompatActivity {
     private void rotateStep(int direction) {
         currStep = currStep+direction;
         if (currStep == images.length) {
-            currStep--;
+            goToArrived();
         } else if (currStep < 0) {
             currStep = 0;
         }
         vp.setCurrentItem(currStep, true);
+    }
+
+    private void goToArrived() {
+        Intent arrived = new Intent(NavigationActivity.this, ArrivedActivity.class);
+        startActivity(arrived);
     }
 
     //Implement PagerAdapter Class to handle individual page creation

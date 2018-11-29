@@ -30,17 +30,17 @@ public class RouteOptionsActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_stairs:
-                    changeCenterIcon(R.drawable.stairs_icon);
+                    changeRoutePreview(R.drawable.stair_route_option);
                     changeEstimates(R.string.stairs_dist_est, R.string.stairs_time_est);
                     takeElevator = false;
                     break;
                 case R.id.navigation_elev:
-                    changeCenterIcon(R.drawable.elevator_icon);
+                    changeRoutePreview(R.drawable.elevator_route_option);
                     changeEstimates(R.string.elev_distance_est, R.string.elev_time_est);
                     takeElevator = true;
                     break;
             }
-            return true;
+            return false;
         }
     };
 
@@ -93,10 +93,11 @@ public class RouteOptionsActivity extends AppCompatActivity {
         dest.setText(destName);
     }
 
-    private void changeCenterIcon(Integer icon) {
-        final ImageView iconView = findViewById(R.id.ascend);
-        iconView.setImageResource(icon);
+    private void changeRoutePreview(Integer picture) {
+        final ImageView imageView = findViewById(R.id.routePicture);
+        imageView.setImageResource(picture);
     }
+
 
     private void changeEstimates(Integer distEst, Integer timeEst) {
         final TextView distEstView = findViewById(R.id.dist_est);
@@ -115,9 +116,14 @@ public class RouteOptionsActivity extends AppCompatActivity {
         startActivity(go);
     }
 
+    public void finish(View view) {
+        finish();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         this.gestureDetectorCompat.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
+
 }

@@ -12,8 +12,7 @@ import android.widget.AutoCompleteTextView;
 public class EnterDestActivity extends AppCompatActivity {
 
     private AutoCompleteTextView editText;
-    private static final String[] destinations = {"SEM Lab", "Wood Shop", "Machine Shop",
-            "Design Studio - 209", "Design Studio - 206", "Design Studio - 204"};
+    private String[] destinations;
     public static final String DESTINATION = "com.slottedspoon.indoornav.DESTINATION";
 
     @Override
@@ -21,6 +20,7 @@ public class EnterDestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_dest);
 
+        destinations = getResources().getStringArray(R.array.acRooms);
         editText = (AutoCompleteTextView) findViewById(R.id.dest_input);
         makeDropdown();
         editText.addTextChangedListener(new TextWatcher() {
@@ -32,6 +32,11 @@ public class EnterDestActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
     }
+
+    public void showDropDown(View view) {
+        editText.showDropDown();
+    }
+
     public void inputDest(View view) {
         Intent i = new Intent(getApplicationContext(), RouteOptionsActivity.class);
         String dest = editText.getText().toString();
@@ -44,7 +49,7 @@ public class EnterDestActivity extends AppCompatActivity {
         //Find TextView control
         AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.dest_input);
         //Set the number of characters the user must type before the drop down list is shown
-        acTextView.setThreshold(1);
+        acTextView.setThreshold(0);
         //Set the adapter
         acTextView.setAdapter(adapter);
     }

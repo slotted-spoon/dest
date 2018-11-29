@@ -63,7 +63,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="28sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeStepGranularity="2sp"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"/>
 

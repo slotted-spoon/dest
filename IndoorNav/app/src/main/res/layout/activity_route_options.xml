@@ -7,105 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".RouteOptionsActivity">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/body"
-        android:layout_width="match_parent"
-        android:layout_height="603dp"
-        android:layout_marginTop="80dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/navigation"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/dest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:textSize="32sp" />
-
-        <LinearLayout
-            android:id="@+id/imageSet"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/dest"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:gravity="center"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeMaxTextSize="36sp"
+            app:autoSizeStepGranularity="2sp"/>
 
-            <ImageView
-                android:id="@+id/startImage"
-                android:layout_width="0dp"
-                android:layout_height="400dp"
-                android:layout_gravity="center"
-                android:layout_weight=".4"
-                app:srcCompat="@drawable/exit_room" />
-
-            <ImageView
-                android:id="@+id/ascend"
-                android:layout_width="0dp"
-                android:layout_height="400dp"
-                android:layout_gravity="center"
-                android:layout_weight=".15"
-                app:srcCompat="@drawable/stairs_icon" />
-
-            <ImageView
-                android:id="@+id/destImage"
-                android:layout_width="0dp"
-                android:layout_height="400dp"
-                android:layout_gravity="center"
-                android:layout_weight=".4"
-                app:srcCompat="@drawable/arrive_after_stairs" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/estimates"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/imageSet"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/dist_est"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="28sp"
-                android:text="@string/stairs_dist_est"/>
-            <TextView
-                android:id="@+id/time_est"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="28sp"
-                android:text="@string/stairs_time_est"/>
-            <Switch
-                android:id="@+id/should_vibrate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:checked="true"
-                android:layout_marginStart="125dp"
-                android:layout_marginLeft="125dp"
-                android:text="@string/pref_title_vibrate"
-                 />
-        </LinearLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="31dp"
-            android:layout_marginRight="31dp"
-            android:layout_marginBottom="118dp"
-            android:clickable="true"
-            android:onClick="clickGo"
-            app:backgroundTint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_arrow_forward_black_24dp"
-            android:focusable="true" />
-    </RelativeLayout>
+        <ImageButton
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:onClick="finish"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+    </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -118,5 +53,79 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation" />
+
+    <ImageView
+        android:id="@+id/routePicture"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="52dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/stair_route_option" />
+
+    <TextView
+        android:id="@+id/dist_est"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="start"
+        android:text="@string/stairs_dist_est"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/startNavigation"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/time_est"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="end"
+        android:text="@string/stairs_time_est"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/startNavigation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/startNavigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="96dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/go"
+        android:textSize="30sp"
+        android:onClick="clickGo"
+        app:layout_constraintBottom_toBottomOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Switch
+        android:id="@+id/should_vibrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:checked="true"
+        android:gravity="center"
+        android:text="@string/pref_title_vibrate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startNavigation" />
 
 </android.support.constraint.ConstraintLayout>
